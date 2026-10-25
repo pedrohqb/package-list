@@ -37,17 +37,7 @@ cd package-list/cachyos
 
 #### 2. Configurar o Chaotic-AUR
 
-Conforme as [instruções oficiais](https://github.com/chaotic-aur):
-
-```sh
-sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-sudo pacman-key --lsign-key 3056513887B78AEB
-sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-printf '\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist\n' | sudo tee -a /etc/pacman.conf
-sudo pacman -Syu
-```
-
-Antes de rodar o `printf`, confira com `grep chaotic /etc/pacman.conf` se o repositório já não está no arquivo, para não duplicar a seção.
+Siga as instruções oficiais de instalação do Chaotic-AUR: <https://aur.chaotic.cx/docs>.
 
 #### 3. Instalar os pacotes dos repositórios
 
