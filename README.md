@@ -16,7 +16,8 @@ Os comandos abaixo funcionam tanto no **fish** quanto no **bash**, salvo onde in
 
 | Arquivo | O que contém | Comando que gerou |
 |---|---|---|
-| `pacman.txt` | Pacotes instalados explicitamente a partir de repositórios (Arch, CachyOS **e Chaotic-AUR**) | `pacman -Qqen` |
+| `pacman.txt` | Pacotes instalados explicitamente a partir de repositórios (Arch, CachyOS **e Chaotic-AUR**), sem drivers | `pacman -Qqen \| grep -vxEf exclude.txt` |
+| `exclude.txt` | Padrões (regex) de drivers e microcódigo que ficam fora do `pacman.txt` | — |
 | `aur.txt` | Pacotes fora de qualquer repositório configurado (AUR compilado localmente) | `pacman -Qqem` |
 | `flatpak.txt` | Aplicativos Flatpak (sem runtimes) | `flatpak list --app --columns=application` |
 | `flatpak-remotes.txt` | Remotes do Flatpak | `flatpak remotes --columns=name,url` |
@@ -80,7 +81,7 @@ Se o `flatpak-remotes.txt` listar remotes além do Flathub, adicione-os com `fla
 
 ### Observações
 
-- **Hardware:** a lista inclui drivers da máquina atual (Intel: `intel-ucode`, `vulkan-intel`, `intel-media-sdk`; AMD: `vulkan-radeon`, `xf86-video-amdgpu`). Em outro hardware, retire do `pacman.txt` o que não se aplica.
+- **Drivers:** a lista não traz drivers de vídeo nem microcódigo, para servir em qualquer máquina. O instalador do CachyOS (via `chwd`) já instala os adequados ao hardware de cada computador. Os padrões excluídos estão em `exclude.txt`; para excluir outro pacote, acrescente uma linha ali.
 - **Boot e sistema de arquivos:** `limine`, `limine-mkinitcpio-hook`, `limine-snapper-sync`, `snapper`, `cachyos-snapper-support` e `btrfs-assistant` pressupõem Limine + Btrfs. Se a nova instalação usar outro bootloader (ex.: systemd-boot) ou outro sistema de arquivos, retire essas linhas antes do passo 3.
 - **Serviços:** a lista só reinstala pacotes. Serviços (`libvirtd`, `ufw`, `bluetooth`, `cups` etc.) e configurações precisam ser habilitados/restaurados à parte.
 
@@ -90,7 +91,7 @@ Na máquina atual, dentro do clone do repositório:
 
 ```sh
 cd cachyos
-pacman -Qqen > pacman.txt
+pacman -Qqen | grep -vxEf exclude.txt > pacman.txt
 pacman -Qqem > aur.txt
 flatpak list --app --columns=application | sort -u > flatpak.txt
 flatpak remotes --columns=name,url > flatpak-remotes.txt

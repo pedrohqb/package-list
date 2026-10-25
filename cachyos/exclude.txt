@@ -1,0 +1,7 @@
+.*-ucode
+intel-.*
+libva-intel-driver.*
+(lib32-)?vulkan-(intel|radeon|nouveau)
+(lib32-)?amdvlk
+(lib32-)?nvidia.*
+xf86-video-.*
