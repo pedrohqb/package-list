@@ -4,13 +4,13 @@ Listas dos pacotes instalados nas minhas distros, para reinstalar tudo rapidamen
 
 | Pasta | Distro | Conteúdo |
 |---|---|---|
-| [`cachyos/`](cachyos/) | CachyOS (KDE Plasma) | pacman, AUR e Flatpak |
+| [`cachyos/`](cachyos/) | CachyOS (KDE Plasma + Limine + Btrfs) | pacman, AUR e Flatpak |
 
 Os comandos abaixo funcionam tanto no **fish** quanto no **bash**, salvo onde indicado.
 
 ---
 
-## CachyOS
+## CachyOS (KDE Plasma + Limine + Btrfs)
 
 ### Arquivos
 
@@ -28,7 +28,7 @@ Os comandos abaixo funcionam tanto no **fish** quanto no **bash**, salvo onde in
 
 #### 1. Instalar o CachyOS e clonar este repositório
 
-Faça a instalação normal do CachyOS (KDE Plasma) e, depois do primeiro boot:
+Instale o CachyOS com KDE Plasma, bootloader Limine e sistema de arquivos Btrfs (os padrões do instalador) e, depois do primeiro boot:
 
 ```sh
 sudo pacman -Syu git
