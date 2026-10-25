@@ -1,3 +1,4 @@
 com.github.tchx84.Flatseal
 com.usebottles.bottles
 io.github.flattool.Warehouse
+it.mijorus.gearlever
