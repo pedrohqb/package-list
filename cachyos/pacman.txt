@@ -97,6 +97,7 @@ foomatic-db-nonfree-ppds
 foomatic-db-ppds
 fsarchiver
 fwupd
+gearlever
 ghostscript
 gimp
 git
