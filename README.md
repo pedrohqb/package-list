@@ -64,10 +64,10 @@ sudo pacman -S --needed $(comm -12 <(sort pacman.txt) <(pacman -Slq | sort -u))
 
 #### 4. Instalar os pacotes do AUR
 
-Só é necessário se o `aur.txt` não estiver vazio. O CachyOS já traz o `paru`; o `yay` também está no `pacman.txt`.
+Só é necessário se o `aur.txt` não estiver vazio. O `yay` vem do `pacman.txt` (passo 3), então já estará instalado.
 
 ```sh
-paru -S --needed - < aur.txt
+yay -S --needed - < aur.txt
 ```
 
 #### 5. Instalar os Flatpaks
