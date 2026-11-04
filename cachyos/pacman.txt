@@ -32,7 +32,6 @@ cachyos-gaming-applications
 cachyos-gaming-meta
 cachyos-hello
 cachyos-hooks
-cachyos-iridescent-kde
 cachyos-kde-settings
 cachyos-kernel-manager
 cachyos-keyring
@@ -107,6 +106,7 @@ gnome-keyring
 graphicsmagick
 gsfonts
 gst-libav
+gst-plugin-dav1d
 gst-plugin-pipewire
 gst-plugin-va
 gst-plugins-bad
@@ -223,7 +223,6 @@ plasma-systemmonitor
 plasma-thunderbolt
 plocate
 plymouth
-plymouth-kcm
 podman
 poppler-glib
 power-profiles-daemon
