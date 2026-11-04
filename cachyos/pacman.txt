@@ -101,6 +101,7 @@ gearlever
 ghostscript
 gimp
 git
+github-cli
 glances
 gnome-keyring
 graphicsmagick
