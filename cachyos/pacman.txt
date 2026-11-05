@@ -94,6 +94,7 @@ foomatic-db-gutenprint-ppds
 foomatic-db-nonfree
 foomatic-db-nonfree-ppds
 foomatic-db-ppds
+freerdp
 fsarchiver
 fwupd
 gearlever
@@ -140,6 +141,7 @@ kolf
 kolourpaint
 konsole
 kontainer
+krdc
 kscreen
 kwallet-pam
 kwalletmanager
@@ -154,6 +156,7 @@ libreoffice-fresh
 libreoffice-fresh-pt-br
 libva-utils
 libvirt
+libvncserver
 limine
 limine-mkinitcpio-hook
 limine-snapper-sync
