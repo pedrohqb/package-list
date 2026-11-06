@@ -191,6 +191,7 @@ nilfs-utils
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
+npm
 nss-mdns
 nvme-cli
 obs-studio
