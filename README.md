@@ -72,12 +72,15 @@ yay -S --needed - < aur.txt
 
 #### 5. Instalar os Flatpaks
 
+A lista mistura aplicativos do Flathub e do [FlatPark](https://flatpark.org/) (por exemplo, Tessera e PDFsam Basic). Adicione os dois remotes e instale sem indicar o remote: o Flatpak procura cada aplicativo nos remotes configurados.
+
 ```sh
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-xargs -a flatpak.txt flatpak install -y flathub
+flatpak remote-add --if-not-exists flatpark https://dl.flatpark.org/flatpark.flatpakrepo
+xargs -a flatpak.txt flatpak install -y
 ```
 
-Se o `flatpak-remotes.txt` listar remotes além do Flathub, adicione-os com `flatpak remote-add` antes de instalar.
+Se o `flatpak-remotes.txt` listar outros remotes, adicione-os também com `flatpak remote-add` antes de instalar. Use o arquivo `.flatpakrepo` de cada um, que traz a chave de assinatura; o endereço salvo no `flatpak-remotes.txt` serve só de referência.
 
 ### Observações
 
