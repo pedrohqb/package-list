@@ -20,7 +20,6 @@ Os comandos abaixo funcionam tanto no **fish** quanto no **bash**, salvo onde in
 | `exclude.txt` | Padrões (regex) de drivers e microcódigo que ficam fora do `pacman.txt` | — |
 | `aur.txt` | Pacotes fora de qualquer repositório configurado (AUR compilado localmente) | `pacman -Qqem` |
 | `flatpak.txt` | Aplicativos Flatpak (sem runtimes) | `flatpak list --app --columns=application` |
-| `flatpak-remotes.txt` | Remotes do Flatpak | `flatpak remotes --columns=name,url` |
 
 > **Atenção:** vários pacotes do `pacman.txt` vêm do **Chaotic-AUR** (por exemplo `brave-origin-bin`, `claude-desktop`, `chatgpt-desktop-bin`, `pje-office`, `serproid`, `safesignidentityclient`, `softplan-websigner`, `lacuna-webpki`, `spotify`, `zoom`, `onlyoffice-bin`, `ventoy-bin`). Como o pacman os enxerga como pacotes de repositório, eles aparecem no `pacman.txt`, e não no `aur.txt`. Por isso o Chaotic-AUR precisa ser configurado **antes** da restauração (passo 2).
 
@@ -80,8 +79,6 @@ flatpak remote-add --if-not-exists flatpark https://dl.flatpark.org/flatpark.fla
 xargs -a flatpak.txt flatpak install -y
 ```
 
-Se o `flatpak-remotes.txt` listar outros remotes, adicione-os também com `flatpak remote-add` antes de instalar. Use o arquivo `.flatpakrepo` de cada um, que traz a chave de assinatura; o endereço salvo no `flatpak-remotes.txt` serve só de referência.
-
 ### Observações
 
 - **Drivers:** a lista não traz drivers de vídeo nem microcódigo, para servir em qualquer máquina. O instalador do CachyOS (via `chwd`) já instala os adequados ao hardware de cada computador. Os padrões excluídos estão em `exclude.txt`; para excluir outro pacote, acrescente uma linha ali.
@@ -97,7 +94,6 @@ cd cachyos
 pacman -Qqen | grep -vxEf exclude.txt > pacman.txt
 pacman -Qqem > aur.txt
 flatpak list --app --columns=application | sort -u > flatpak.txt
-flatpak remotes --columns=name,url > flatpak-remotes.txt
 cd ..
 git add -A
 git commit -m "CachyOS: atualiza listas de pacotes"

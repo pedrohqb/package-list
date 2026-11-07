@@ -1,2 +1,0 @@
-flathub	https://dl.flathub.org/repo/
-flatpark	https://dl.flatpark.org/
