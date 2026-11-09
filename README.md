@@ -19,7 +19,7 @@ Os comandos abaixo funcionam tanto no **fish** quanto no **bash**, salvo onde in
 | `pacman.txt` | Pacotes instalados explicitamente a partir de repositórios (Arch, CachyOS **e Chaotic-AUR**), sem drivers | `pacman -Qqen \| grep -vxEf exclude.txt` |
 | `exclude.txt` | Padrões (regex) de drivers e microcódigo que ficam fora do `pacman.txt` | — |
 | `aur.txt` | Pacotes fora de qualquer repositório configurado (AUR compilado localmente) | `pacman -Qqem` |
-| `flatpak.txt` | Aplicativos Flatpak (sem runtimes) | `flatpak list --app --columns=application` |
+| `flatpak.txt` | Aplicativos Flatpak (sem runtimes) e as extensões de driver do Tessera | ver [Atualizar as listas](#atualizar-as-listas) |
 
 > **Atenção:** vários pacotes do `pacman.txt` vêm do **Chaotic-AUR** (por exemplo `brave-origin-bin`, `claude-desktop`, `chatgpt-desktop-bin`, `pje-office`, `serproid`, `safesignidentityclient`, `softplan-websigner`, `lacuna-webpki`, `spotify`, `zoom`, `onlyoffice-bin`, `ventoy-bin`). Como o pacman os enxerga como pacotes de repositório, eles aparecem no `pacman.txt`, e não no `aur.txt`. Por isso o Chaotic-AUR precisa ser configurado **antes** da restauração (passo 2).
 
@@ -71,7 +71,7 @@ yay -S --needed - < aur.txt
 
 #### 5. Instalar os Flatpaks
 
-A lista mistura aplicativos do Flathub e do [FlatPark](https://flatpark.org/) (por exemplo, Tessera e PDFsam Basic). Adicione os dois remotes e instale sem indicar o remote: o Flatpak procura cada aplicativo nos remotes configurados.
+A lista mistura aplicativos do Flathub e do [FlatPark](https://flatpark.org/) (por exemplo, Tessera e PDFsam Basic), além das extensões de driver do Tessera (`io.github.pedrohqb.Tessera.Driver.*`), que o Flatpak trata como runtimes e por isso precisam estar na lista à parte dos apps. Adicione os dois remotes e instale sem indicar o remote: o Flatpak procura cada aplicativo nos remotes configurados.
 
 ```sh
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -89,16 +89,24 @@ xargs -a flatpak.txt flatpak install -y
 
 Na máquina atual, dentro do clone do repositório:
 
-```sh
+```fish
+# fish
 cd cachyos
 pacman -Qqen | grep -vxEf exclude.txt > pacman.txt
 pacman -Qqem > aur.txt
-flatpak list --app --columns=application | sort -u > flatpak.txt
+begin; flatpak list --app --columns=application; flatpak list --runtime --columns=application | grep '^io.github.pedrohqb.Tessera.Driver.'; end | sort -u > flatpak.txt
 cd ..
 git add -A
 git commit -m "CachyOS: atualiza listas de pacotes"
 git push
 ```
+
+```bash
+# bash: igual, trocando a linha do flatpak.txt por
+{ flatpak list --app --columns=application; flatpak list --runtime --columns=application | grep '^io.github.pedrohqb.Tessera.Driver.'; } | sort -u > flatpak.txt
+```
+
+O `flatpak list --app` não mostra as extensões do Tessera (para o Flatpak, são runtimes); a segunda parte do comando as acrescenta.
 
 ---
 

@@ -2,4 +2,6 @@ com.github.tchx84.Flatseal
 com.usebottles.bottles
 io.github.flattool.Warehouse
 io.github.pedrohqb.Tessera
+io.github.pedrohqb.Tessera.Driver.SafeSign
+io.github.pedrohqb.Tessera.Driver.SerproID
 org.pdfsam.basic
