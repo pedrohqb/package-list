@@ -96,6 +96,7 @@ haruna
 hdparm
 hwdetect
 hwinfo
+intel-gpu-tools
 isoimagewriter
 iwd
 joplin-desktop
