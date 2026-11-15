@@ -17,7 +17,7 @@ Os comandos abaixo funcionam tanto no **fish** quanto no **bash**, salvo onde in
 | Arquivo | O que contém | Comando que gerou |
 |---|---|---|
 | `pacman.txt` | Pacotes instalados explicitamente a partir de repositórios (Arch, CachyOS **e Chaotic-AUR**), sem drivers | `pacman -Qqen \| grep -vxEf exclude.txt` |
-| `exclude.txt` | Padrões (regex) do microcódigo e de todos os pacotes que o `chwd` instala conforme o hardware, que ficam fora do `pacman.txt` | — |
+| `exclude.txt` | Padrões (regex) que ficam fora do `pacman.txt`: o microcódigo, a base que o instalador do CachyOS sempre instala e todos os pacotes que o `chwd` instala conforme o hardware | — |
 | `aur.txt` | Pacotes fora de qualquer repositório configurado (AUR compilado localmente) | `pacman -Qqem` |
 | `flatpak.txt` | Aplicativos Flatpak (sem runtimes) e as extensões de driver do Tessera | ver [Atualizar as listas](#atualizar-as-listas) |
 
@@ -45,7 +45,7 @@ Siga as instruções oficiais de instalação do Chaotic-AUR: <https://aur.chaot
 sudo pacman -S --needed - < pacman.txt
 ```
 
-O `--needed` pula o que já veio com a instalação (kernel, pacotes base do CachyOS etc.).
+O `--needed` pula o que já veio com a instalação (os grupos de pacotes marcados por padrão no instalador, por exemplo).
 
 Se algum pacote tiver saído dos repositórios desde o backup, o pacman aborta tudo com `target not found`. Nesse caso, veja quais faltam e instale só os disponíveis:
 
@@ -82,7 +82,7 @@ xargs -a flatpak.txt flatpak install -y
 ### Observações
 
 - **Drivers:** a lista não traz microcódigo nem nenhum dos pacotes dos perfis do [`chwd`](https://github.com/CachyOS/chwd/tree/master/profiles) (drivers de vídeo, Mesa, firmwares específicos, ferramentas de VM, de notebooks e portáteis, SDKs de IA), para servir em qualquer máquina. O instalador do CachyOS (via `chwd`) já instala os adequados ao hardware de cada computador. Os padrões excluídos estão em `exclude.txt`; para excluir outro pacote, acrescente uma linha ali.
-- **Boot e sistema de arquivos:** `limine`, `limine-mkinitcpio-hook`, `limine-snapper-sync`, `snapper`, `cachyos-snapper-support` e `btrfs-assistant` pressupõem Limine + Btrfs. Se a nova instalação usar outro bootloader (ex.: systemd-boot) ou outro sistema de arquivos, retire essas linhas antes do passo 3.
+- **Base, boot e sistema de arquivos:** a lista não traz a base que o [instalador](https://github.com/CachyOS/cachyos-calamares) sempre instala (`base`, kernels, keyrings e mirrorlists do CachyOS, ferramentas de sistemas de arquivos etc.) nem os pacotes que ele acrescenta conforme o bootloader e o sistema de arquivos escolhidos (Limine, GRUB, rEFInd ou systemd-boot; Btrfs com snapper, ZFS ou bcachefs). Assim a lista serve com qualquer combinação, e o instalador põe os pacotes certos para cada uma.
 - **Serviços:** a lista só reinstala pacotes. Serviços (`libvirtd`, `ufw`, `bluetooth`, `cups` etc.) e configurações precisam ser habilitados/restaurados à parte.
 
 ### Atualizar as listas
