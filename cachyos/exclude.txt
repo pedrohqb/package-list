@@ -5,3 +5,4 @@ libva-intel-driver.*
 (lib32-)?amdvlk
 (lib32-)?nvidia.*
 xf86-video-.*
+vpl-gpu-rt
