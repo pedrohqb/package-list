@@ -1,5 +1,5 @@
 .*-ucode
-intel-.*
+intel-(media-driver|media-sdk|lpmd)
 libva-intel-driver.*
 libva-nvidia-driver
 (lib32-)?vulkan-(intel|radeon|nouveau|swrast|virtio|icd-loader)
