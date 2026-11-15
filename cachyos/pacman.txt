@@ -109,7 +109,6 @@ gsfonts
 gst-libav
 gst-plugin-dav1d
 gst-plugin-pipewire
-gst-plugin-va
 gst-plugins-bad
 gst-plugins-ugly
 gutenprint
@@ -147,8 +146,6 @@ kwallet-pam
 kwalletmanager
 lacuna-webpki
 less
-lib32-mesa
-lib32-opencl-mesa
 libdvdcss
 libgsf
 libopenraw
@@ -200,7 +197,6 @@ okular
 onedrive-abraunegg
 onlyoffice-bin
 openai-codex
-opencl-mesa
 openrct2
 openssh
 os-prober
@@ -260,7 +256,6 @@ spotify
 sudo
 supertux
 supertuxkart
-switcheroo-control
 swtpm
 sysbench
 sysfsutils
