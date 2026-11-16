@@ -197,6 +197,7 @@ rebuild-detector
 reflector
 ripgrep
 rsync
+sac-core
 safesignidentityclient
 sbctl
 serproid

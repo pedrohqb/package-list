@@ -21,7 +21,7 @@ Os comandos abaixo funcionam tanto no **fish** quanto no **bash**, salvo onde in
 | `aur.txt` | Pacotes fora de qualquer repositório configurado (AUR compilado localmente) | `pacman -Qqem` |
 | `flatpak.txt` | Aplicativos Flatpak (sem runtimes) e as extensões de driver do Tessera | ver [Atualizar as listas](#atualizar-as-listas) |
 
-> **Atenção:** vários pacotes do `pacman.txt` vêm do **Chaotic-AUR** (por exemplo `brave-origin-bin`, `claude-desktop`, `chatgpt-desktop-bin`, `pje-office`, `serproid`, `safesignidentityclient`, `softplan-websigner`, `lacuna-webpki`, `spotify`, `zoom`, `onlyoffice-bin`, `ventoy-bin`). Como o pacman os enxerga como pacotes de repositório, eles aparecem no `pacman.txt`, e não no `aur.txt`. Por isso o Chaotic-AUR precisa ser configurado **antes** da restauração (passo 2).
+> **Atenção:** vários pacotes do `pacman.txt` vêm do **Chaotic-AUR** (por exemplo `brave-origin-bin`, `claude-desktop`, `chatgpt-desktop-bin`, `pje-office`, `serproid`, `safesignidentityclient`, `sac-core`, `softplan-websigner`, `lacuna-webpki`, `spotify`, `zoom`, `onlyoffice-bin`, `ventoy-bin`). Como o pacman os enxerga como pacotes de repositório, eles aparecem no `pacman.txt`, e não no `aur.txt`. Por isso o Chaotic-AUR precisa ser configurado **antes** da restauração (passo 2).
 
 ### Restauração
 
