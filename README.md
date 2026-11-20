@@ -1,12 +1,13 @@
 # package-list
 
-Listas dos pacotes instalados nas minhas distros, para reinstalar tudo rapidamente depois de uma instalação limpa. Cada distro tem sua própria pasta.
+Listas dos pacotes instalados nos meus sistemas, para reinstalar tudo rapidamente depois de uma instalação limpa. Cada sistema tem sua própria pasta.
 
-| Pasta | Distro | Conteúdo |
+| Pasta | Sistema | Conteúdo |
 |---|---|---|
 | [`cachyos/`](cachyos/) | CachyOS (KDE Plasma + Limine + Btrfs) | pacman, AUR e Flatpak |
+| [`openbsd/`](openbsd/) | OpenBSD 8.0 (Xfce) no ThinkPad X230 | script de pós-instalação e script de revisão |
 
-Os comandos abaixo funcionam tanto no **fish** quanto no **bash**, salvo onde indicado.
+Na seção do CachyOS, os comandos funcionam tanto no **fish** quanto no **bash**, salvo onde indicado.
 
 ---
 
@@ -107,6 +108,66 @@ git push
 ```
 
 O `flatpak list --app` não mostra as extensões do Tessera (para o Flatpak, são runtimes); a segunda parte do comando as acrescenta.
+
+---
+
+## OpenBSD 8.0 (Xfce) no ThinkPad X230
+
+No OpenBSD não há só uma lista de pacotes: um script instala os programas e configura o sistema e a sessão. As listas ficam dentro do próprio script, por categoria e com a descrição de cada pacote, seguindo o `gnome.Brewfile` do repositório [brewfile](https://github.com/pedrohqb/brewfile) e os aplicativos que já vêm no Bluefin, com equivalentes para o que não existe no OpenBSD.
+
+### Arquivos
+
+| Arquivo | O que faz |
+|---|---|
+| `openbsd-x230.sh` | Pós-instalação: aplica correções e firmware, instala os pacotes e configura serviços, energia, desempenho, Wi-Fi, teclado, TrackPoint, tela de login, aparência do Xfce, terminal e atalhos de aplicativos web |
+| `revisao-openbsd.sh` | Revisão: confere pacotes, serviços, ajustes e arquivos de configuração, sem alterar nada, e lista o que falta |
+
+### Uso
+
+#### 1. Instalar o OpenBSD
+
+Grave o `install80.img` num pendrive com `dd` (o OpenBSD não inicia pelo Ventoy) e instale com o **cabo de rede ligado**, todos os conjuntos (inclusive os do X) e teclado `us`. O firmware do Wi-Fi e do vídeo é baixado no primeiro boot, por isso a rede cabeada.
+
+#### 2. Rodar a pós-instalação
+
+Como root (`su -`), já que o `doas` ainda não está configurado; troque `pedro` pelo seu usuário:
+
+```sh
+pkg_add git
+git clone https://github.com/pedrohqb/package-list.git
+sh package-list/openbsd/openbsd-x230.sh pedro
+reboot
+```
+
+Antes de rodar, veja os **ajustes rápidos** no topo do script: rede Wi-Fi (`WIFI_SSID` e `WIFI_SENHA`), layout do painel (`LAYOUT`), tema, fontes, teclado, shell do terminal, Hyper-Threading e cache de disco. Depois de usar, apague a senha do Wi-Fi do arquivo e não a envie para o repositório.
+
+O script pode ser executado mais de uma vez: pula os pacotes já instalados e guarda uma cópia `.orig` de cada arquivo de configuração antes da primeira alteração. Se a sessão do Xfce estiver aberta, saia dela antes, para o Xfce não sobrescrever o que o script grava.
+
+#### 3. Conferir
+
+Com o usuário comum, sem `doas`:
+
+```sh
+sh package-list/openbsd/revisao-openbsd.sh
+```
+
+### O que o script configura
+
+- **Sistema:** `syspatch`, `fw_update`, `doas` para o grupo `wheel`, grupo `_shutdown` (desligar pelo menu) e classe de login `desktop`, com limite de memória por processo de metade da RAM.
+- **Energia e desempenho:** `apmd -A` (frequência automática e suspensão com 7% de bateria), suspensão ao fechar a tampa, escurecimento e desligamento da tela na bateria, `noatime`, cache de disco em 40% da RAM e Hyper-Threading ligado (`hw.blockcpu=L`).
+- **Entrada:** teclado inglês internacional com teclas mortas (`us`, variante `intl`) na sessão gráfica, rolagem com o botão do meio do TrackPoint e toque para clicar no touchpad.
+- **Aparência:** tema Greybird escuro, ícones Papirus, fontes Cantarell e JetBrains Mono, tela de login sem o console e sem bipe. Com `LAYOUT="gnome"`, o painel vira uma barra superior com dock.
+- **Terminal:** o Terminal do Xfce abre o fish; o shell de login (console, SSH e root) continua sendo o ksh, com histórico e autocompletar no `~/.kshrc`.
+- **Aplicativos web:** atalhos que abrem ChatGPT, Claude, Discord, Teams, WhatsApp e Zoom no Chromium, em janela própria, porque esses serviços não têm cliente para OpenBSD.
+- **Discos externos:** `doas mount` e `doas umount` sem senha, mais o plugin de montagem do painel.
+
+### Observações
+
+- **Hardware:** o script foi feito e testado num ThinkPad X230 com placa Wi-Fi Intel trocada (driver `iwm`). A placa sem fio é detectada pelo sistema, não pelo nome; o que é próprio do X230 são a rolagem do TrackPoint e, no script de revisão, o nome `iwm0` e os 4 threads esperados.
+- **Sem equivalente no OpenBSD 8.0:** Claude Code, ONLYOFFICE, PDFsam Basic, BibleTime (só a biblioteca SWORD), Wine, PJeOffice Pro, Tessera e os drivers SafeNet, SafeSign e SerproID, que dependem de Linux. O token ePass2003 funciona pelo OpenSC: no Firefox, carregue `/usr/local/lib/pkcs11/opensc-pkcs11.so` em Dispositivos de segurança.
+- **Pacotes com variantes ou mais de uma versão:** o `pkg_add` pergunta qual instalar. No script, `nome--variante` escolhe a variante (por exemplo `keepassxc--browser`) e `nome->=N` escolhe a versão (por exemplo `gimp->=3`). O script confere cada instalação com o `pkg_info` e lista no fim o que não instalou.
+- **Pendrive no painel:** o plugin só lista o que está no `/etc/fstab`. Veja o nome do pendrive com `dmesg | tail` (por exemplo `sd3`, depois dos discos internos e do volume criptografado) e registre-o: `/dev/sd3i /home/pedro/usb msdos rw,noauto,nodev,nosuid 0 0`. Feche a janela do Thunar na pasta antes de desmontar.
+- **OneDrive:** o `onedrive-cli` não existe para OpenBSD; use `rclone config` e escolha "Microsoft OneDrive".
 
 ---
 
