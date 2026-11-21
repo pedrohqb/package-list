@@ -179,7 +179,8 @@ Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certifi
 - **Janelas:** encaixe nas bordas e nos cantos ao arrastar, Super+setas para metades, maximizar e minimizar, e Super+Espaço para abrir o menu.
 - **Aparência:** tema Greybird escuro, ícones Papirus, fontes Cantarell e JetBrains Mono, tela de login sem o console e sem bipe. Com `LAYOUT="gnome"`, o painel vira uma barra superior com dock.
 - **Terminal:** o Terminal do Xfce abre o fish; o shell de login (console, SSH e root) continua sendo o ksh, com histórico e autocompletar no `~/.kshrc`.
-- **Aplicativos web:** atalhos que abrem ChatGPT, Claude, Discord, Teams, WhatsApp e Zoom no Chromium, em janela própria, porque esses serviços não têm cliente para OpenBSD.
+- **Aplicativos web:** atalhos para ChatGPT, Claude, Discord, Teams, WhatsApp e Zoom, porque esses serviços não têm cliente para OpenBSD. Abrem no Chromium, em janela própria, menos o Teams e o Zoom, que abrem no Firefox por causa da webcam.
+- **Microfone e webcam:** gravação de áudio e de vídeo liberada no sistema, e a webcam entregue ao usuário a cada login gráfico.
 - **Discos externos:** `doas mount` e `doas umount` sem senha, mais o plugin de montagem do painel.
 
 ### Observações
@@ -188,6 +189,7 @@ Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certifi
 - **Sem equivalente no OpenBSD 8.0:** Claude Code, ONLYOFFICE, PDFsam Basic, BibleTime (só a biblioteca SWORD), Wine, Tessera e os drivers SafeNet, SafeSign e SerproID, que dependem de Linux. O PJeOffice Pro roda pelo script próprio (passo 4). O token ePass2003 funciona pelo OpenSC: no Firefox, carregue `/usr/local/lib/pkcs11/opensc-pkcs11.so` em Dispositivos de segurança.
 - **Pacotes com variantes ou mais de uma versão:** o `pkg_add` pergunta qual instalar. No script, `nome--variante` escolhe a variante (por exemplo `keepassxc--browser`) e `nome->=N` escolhe a versão (por exemplo `gimp->=3`). O script confere cada instalação com o `pkg_info` e lista no fim o que não instalou.
 - **Pendrive no painel:** o plugin só lista o que está no `/etc/fstab`. Veja o nome do pendrive com `dmesg | tail` (por exemplo `sd3`, depois dos discos internos e do volume criptografado) e registre-o: `/dev/sd3i /home/pedro/usb msdos rw,noauto,nodev,nosuid 0 0`. Feche a janela do Thunar na pasta antes de desmontar.
+- **Webcam:** funciona no Firefox e no comando `video`. No Chromium, a câmera é detectada, mas não chega imagem; por isso os atalhos do Teams e do Zoom usam o Firefox. No ThinkPad X230, a câmera entrega 30 quadros por segundo até 640×480 e 10 em 1280×720. O aplicativo Snapshot (Câmera do GNOME) não roda, por depender do PipeWire.
 - **OneDrive:** o `onedrive-cli` não existe para OpenBSD; use `rclone config` e escolha "Microsoft OneDrive".
 - **VPN WireGuard:** o WireGuard faz parte do sistema; o pacote `wireguard-tools` traz o `wg-quick`, que usa o mesmo arquivo `.conf` do Linux. Guarde-o como `/etc/wireguard/wg0.conf`, com dono `root` e permissão `600`, e use `doas wg-quick up wg0` e `doas wg-quick down wg0`; `doas wg show` mostra se o túnel subiu.
 - **Pastas de rede (Samba):** com o `gvfs-smb`, o Thunar abre `smb://servidor/pasta` (Ctrl+L para digitar o endereço). Pela VPN, use o endereço IP do servidor. Se o endereço ficar vermelho logo após instalar o pacote, saia e entre na sessão.
