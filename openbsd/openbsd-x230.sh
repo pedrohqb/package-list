@@ -67,6 +67,7 @@ mpv                     # mpv: reprodutor de vídeo
 cups                    # CUPS: sistema de impressão
 cups-filters            # cups-filters: filtros e drivers genéricos de impressão
 system-config-printer   # system-config-printer: configura impressoras
+brlaser                 # brlaser: driver de impressoras laser monocromáticas da Brother
 xfce4-mount             # Mount: botão no painel para montar e desmontar pendrives e discos externos
 xfce4-power-manager     # Gerenciador de energia do Xfce: bateria, brilho e desligamento da tela
 upower                  # UPower: informa o estado da bateria ao Xfce
