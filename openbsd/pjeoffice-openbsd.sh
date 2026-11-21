@@ -108,6 +108,37 @@ if [ -x "$FFMPEG" ] && [ -e "$DESTINO/ffmpeg.exe" ]; then
 	ln -s "$FFMPEG" "$DESTINO/ffmpeg.exe"
 fi
 
+# O corte por trechos abre um player à parte (cutplayer4jfx.jar), que o PJeOffice
+# inicia pelo caminho fixo jre/bin/java e que precisa do JavaFX. O OpenBSD 8.0
+# não tem o pacote openjfx, então este substituto de jre/bin/java avisa que a
+# função não está disponível; se o openjfx e o JDK 21 existirem, tenta usá-los.
+mkdir -p "$DESTINO/jre/bin"
+cat > "$DESTINO/jre/bin/java" <<'FIM'
+#!/bin/sh
+FX=/usr/local/share/java/classes/21
+JAVA21=/usr/local/jdk-21/bin/java
+# Só os .jar "-openbsd" entram: os de mesmo nome sem o sufixo são marcadores vazios.
+MP="$(ls "$FX"/javafx-*-openbsd.jar 2>/dev/null | tr '\n' ':')"
+if [ -n "$MP" ] && [ -x "$JAVA21" ]; then
+	exec "$JAVA21" --module-path "${MP%:}" \
+		--add-modules javafx.base,javafx.graphics,javafx.controls,javafx.swing,javafx.media \
+		"$@"
+fi
+MSG="O corte por trechos usa um player que precisa do JavaFX, e o OpenBSD 8.0
+não tem o pacote openjfx.
+
+Alternativas:
+ - no PJeOffice: Dividir a cada 'n' minutos ou a cada 'n' MB;
+ - no terminal:  ffmpeg -i video.mp4 -ss 00:01:30 -to 00:04:00 -c copy trecho.mp4"
+if [ -x /usr/X11R6/bin/xmessage ]; then
+	/usr/X11R6/bin/xmessage -center -title "PJeOffice Pro" "$MSG"
+else
+	echo "$MSG" >&2
+fi
+exit 1
+FIM
+chmod 755 "$DESTINO/jre/bin/java"
+
 cat > "$DESTINO/pjeoffice-pro.sh" <<FIM
 #!/bin/sh
 # Inicia o PJeOffice Pro com o JDK 11 do OpenBSD.

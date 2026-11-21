@@ -169,7 +169,7 @@ Dois ajustes fazem a janela se comportar como no GNOME e no KDE:
 
 As funções de vídeo usam um `ffmpeg` externo, que o PJeOffice procura na pasta do programa com o nome `ffmpeg.exe`. O script troca o binário de Linux por um atalho para `/usr/local/bin/ffmpeg`.
 
-Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certificado A1** (arquivo `.pfx`), e as funções de vídeo (dividir por tamanho, por duração e por cortes, extrair áudio, converter e otimizar) também. **Token não foi testado**; o ePass2003 deve funcionar pelo OpenSC, indicando `/usr/local/lib/pkcs11/opensc-pkcs11.so` na configuração de certificado. Fechar a janela encerra o programa.
+Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certificado A1** (arquivo `.pfx`), e as funções de vídeo que só dependem do `ffmpeg` (dividir por tamanho e por duração e extrair áudio, testadas; converter e otimizar usam o mesmo caminho) também. O **corte por trechos não funciona**: ele abre um player que precisa do JavaFX, e o OpenBSD 8.0 não tem o pacote `openjfx`. No lugar dele, o script deixa um aviso com as alternativas, entre elas cortar pelo terminal com `ffmpeg -i video.mp4 -ss 00:01:30 -to 00:04:00 -c copy trecho.mp4`. **Token não foi testado**; o ePass2003 deve funcionar pelo OpenSC, indicando `/usr/local/lib/pkcs11/opensc-pkcs11.so` na configuração de certificado. Fechar a janela encerra o programa.
 
 ### O que o script configura
 
