@@ -57,6 +57,7 @@ noto-fonts              # Noto: fontes com cobertura ampla de idiomas
 noto-emoji              # Noto Emoji: emojis coloridos
 liberation-fonts        # Liberation: fontes com as métricas de Arial, Times e Courier
 gvfs                    # GVfs: lixeira e pastas de rede no Thunar
+gvfs-smb                # GVfs SMB: compartilhamentos Samba e Windows no Thunar (smb://servidor/pasta)
 xdg-user-dirs           # xdg-user-dirs: cria Documentos, Downloads, Imagens etc.
 xarchiver               # Xarchiver: compacta e extrai arquivos pelo Thunar
 unzip                   # unzip: extrai arquivos .zip
@@ -100,6 +101,7 @@ codex                   # Codex: agente de IA da OpenAI que roda no terminal
 
 # Internet e Nuvem
 rclone                  # rclone: sincroniza pastas com o OneDrive e outras nuvens (no lugar do onedrive-cli)
+wireguard-tools         # WireGuard: comandos wg e wg-quick, para usar um arquivo .conf de VPN
 yt-dlp                  # yt-dlp: baixa vídeos e áudios do YouTube e de centenas de outros sites
 
 # PDF e OCR
