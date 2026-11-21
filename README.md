@@ -160,14 +160,16 @@ Com o usuário comum; o script pede a senha do `doas` só para instalar o JDK 11
 sh package-list/openbsd/pjeoffice-openbsd.sh
 ```
 
-O PJeOffice Pro é um programa Java, e o CNJ só o distribui para Linux, Windows e macOS. O script baixa o `.zip` de Linux do site do CNJ, confere a soma SHA256, descarta o Java embutido (que é para Linux) e roda o `pjeoffice-pro.jar`, sem alteração, no JDK 11 do OpenBSD. Fica em `~/.local/share/pjeoffice-pro`, com atalho no menu.
+O PJeOffice Pro é um programa Java, e o CNJ só o distribui para Linux, Windows e macOS. O script baixa o `.zip` de Linux do site do CNJ, confere a soma SHA256, descarta o Java embutido e o `ffmpeg` (que são para Linux) e roda o `pjeoffice-pro.jar`, sem alteração, no JDK 11 e com o `ffmpeg` do OpenBSD. Fica em `~/.local/share/pjeoffice-pro`, com atalho no menu.
 
 Dois ajustes fazem a janela se comportar como no GNOME e no KDE:
 
 - `-Dpjeoffice_desktop=true` pede o modo de janela, em vez do modo bandeja.
 - `--patch-module` troca, só para o PJeOffice, a classe `java.awt.SystemTray` por um substituto que responde "não há bandeja". Sem isso, no Xfce a janela se recolhe para a bandeja ao ser fechada ou minimizada, e o menu da bandeja aparece em branco. O substituto é compilado na instalação e fica em `sem-bandeja/`.
 
-Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certificado A1** (arquivo `.pfx`). **Token não foi testado**; o ePass2003 deve funcionar pelo OpenSC, indicando `/usr/local/lib/pkcs11/opensc-pkcs11.so` na configuração de certificado. Fechar a janela encerra o programa.
+As funções de vídeo usam um `ffmpeg` externo, que o PJeOffice procura na pasta do programa com o nome `ffmpeg.exe`. O script troca o binário de Linux por um atalho para `/usr/local/bin/ffmpeg`.
+
+Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certificado A1** (arquivo `.pfx`), e as funções de vídeo (dividir por tamanho, por duração e por cortes, extrair áudio, converter e otimizar) também. **Token não foi testado**; o ePass2003 deve funcionar pelo OpenSC, indicando `/usr/local/lib/pkcs11/opensc-pkcs11.so` na configuração de certificado. Fechar a janela encerra o programa.
 
 ### O que o script configura
 

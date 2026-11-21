@@ -2,8 +2,9 @@
 ################################################################################
 # PJeOffice Pro no OpenBSD (experimental)                                      #
 #                                                                              #
-# Baixa o .zip oficial do CNJ para Linux, descarta o Java embutido (que é      #
-# para Linux) e roda o pjeoffice-pro.jar, sem alteração, no JDK 11 do OpenBSD. #
+# Baixa o .zip oficial do CNJ para Linux, descarta o Java embutido e o ffmpeg  #
+# (que são para Linux) e roda o pjeoffice-pro.jar, sem alteração, no JDK 11 e  #
+# com o ffmpeg do OpenBSD.                                                     #
 #                                                                              #
 # USO, com o usuário comum:  sh pjeoffice-openbsd.sh                           #
 # Instala em ~/.local/share/pjeoffice-pro e cria um atalho no menu.            #
@@ -24,6 +25,12 @@ if [ ! -x "$JAVA" ]; then
 	doas pkg_add 'jdk%11'
 fi
 [ -x "$JAVA" ] || { echo "Não achei $JAVA. Veja onde o JDK ficou: ls -d /usr/local/jdk-*" >&2; exit 1; }
+
+FFMPEG="/usr/local/bin/ffmpeg"
+if [ ! -x "$FFMPEG" ]; then
+	echo "==> Instalando o ffmpeg (para as funções de vídeo)"
+	doas pkg_add ffmpeg || echo "    AVISO: sem o ffmpeg, as funções de vídeo não vão funcionar."
+fi
 
 TMP="$(mktemp -d /tmp/pjeoffice.XXXXXX)"
 trap 'rm -rf "$TMP"' EXIT
@@ -91,6 +98,14 @@ if "${JAVA}c" --patch-module java.desktop="$SEMB/src" -d "$SEMB/classes" \
 else
 	echo "    AVISO: não consegui compilar o substituto (veja $SEMB/javac.log)."
 	echo "    O PJeOffice vai funcionar, mas recolhendo para a bandeja."
+fi
+
+# O .zip traz um ffmpeg de Linux com o nome ffmpeg.exe. O PJeOffice o procura
+# por esse nome na pasta do programa, então ele vira um atalho para o do OpenBSD.
+if [ -x "$FFMPEG" ] && [ -e "$DESTINO/ffmpeg.exe" ]; then
+	echo "==> Trocando o ffmpeg de Linux pelo do OpenBSD"
+	rm -f "$DESTINO/ffmpeg.exe"
+	ln -s "$FFMPEG" "$DESTINO/ffmpeg.exe"
 fi
 
 cat > "$DESTINO/pjeoffice-pro.sh" <<FIM
