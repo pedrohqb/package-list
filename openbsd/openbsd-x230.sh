@@ -549,6 +549,18 @@ if [ -n "$TERMINAL_SHELL" ]; then
 EOF
 fi
 
+# Janela de saída sem "Hibernar" nem "Suspensão híbrida": a hibernação exige um
+# swap maior que a RAM, o que o particionamento automático não entrega.
+put "$XML/xfce4-session.xml" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfce4-session" version="1.0">
+  <property name="shutdown" type="empty">
+    <property name="ShowHibernate" type="bool" value="false"/>
+    <property name="ShowHybridSleep" type="bool" value="false"/>
+  </property>
+</channel>
+EOF
+
 # Só no LAYOUT="gnome": sem ícones na área de trabalho, barra superior e dock.
 # No LAYOUT="xfce", o painel e a área de trabalho ficam no padrão do Xfce.
 if [ "$LAYOUT" = "gnome" ]; then
