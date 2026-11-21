@@ -8,8 +8,6 @@ Listas dos pacotes instalados nos meus sistemas, para reinstalar tudo rapidament
 
 Os comandos funcionam tanto no **fish** quanto no **bash**, salvo onde indicado.
 
-O OpenBSD do ThinkPad X230, que é configurado por scripts e não por listas, fica no repositório [openbsd-x230](https://github.com/pedrohqb/openbsd-x230).
-
 ---
 
 ## CachyOS (KDE Plasma + Limine + Btrfs)
