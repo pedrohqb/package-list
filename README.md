@@ -174,7 +174,7 @@ Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certifi
 ### O que o script configura
 
 - **Sistema:** `syspatch`, `fw_update`, `doas` para o grupo `wheel`, grupo `_shutdown` (desligar pelo menu) e classe de login `desktop`, com limite de memória por processo de metade da RAM.
-- **Energia e desempenho:** `apmd -A` (frequência automática e suspensão com 7% de bateria), suspensão ao fechar a tampa, escurecimento e desligamento da tela na bateria, `noatime`, cache de disco em 40% da RAM e Hyper-Threading ligado (`hw.blockcpu=L`).
+- **Energia e desempenho:** `apmd -A` (frequência automática e suspensão com 7% de bateria), suspensão ao fechar a tampa, janela de saída sem o botão de hibernar (o swap padrão é menor que a RAM), escurecimento e desligamento da tela na bateria, `noatime`, cache de disco em 40% da RAM e Hyper-Threading ligado (`hw.blockcpu=L`).
 - **Entrada:** teclado inglês internacional com teclas mortas (`us`, variante `intl`) na sessão gráfica, rolagem com o botão do meio do TrackPoint e toque para clicar no touchpad.
 - **Janelas:** encaixe nas bordas e nos cantos ao arrastar, Super+setas para metades, maximizar e minimizar, e Super+Espaço para abrir o menu.
 - **Aparência:** tema Greybird escuro, ícones Papirus, fontes Cantarell e JetBrains Mono, tela de login sem o console e sem bipe. Com `LAYOUT="gnome"`, o painel vira uma barra superior com dock.
