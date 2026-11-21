@@ -169,7 +169,8 @@ keepassxc--browser      # KeePassXC: gerenciador de senhas offline e de código 
 opensc                  # OpenSC: tokens e cartões com suporte livre, como o ePass2003
 ccid                    # CCID: driver genérico de leitoras de cartão USB
 pcsc-lite               # PC/SC Lite: serviço de acesso a leitoras e tokens
-# (PJeOffice Pro, Tessera e os drivers SafeNet, SafeSign e SerproID dependem de Linux)
+# (Tessera e os drivers SafeNet, SafeSign e SerproID dependem de Linux;
+#  o PJeOffice Pro tem script próprio: pjeoffice-openbsd.sh)
 
 # Virtualização
 qemu                    # QEMU: emulador de máquinas (sem aceleração; para VMs rápidas, use o vmd do próprio OpenBSD)

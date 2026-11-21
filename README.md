@@ -5,7 +5,7 @@ Listas dos pacotes instalados nos meus sistemas, para reinstalar tudo rapidament
 | Pasta | Sistema | Conteúdo |
 |---|---|---|
 | [`cachyos/`](cachyos/) | CachyOS (KDE Plasma + Limine + Btrfs) | pacman, AUR e Flatpak |
-| [`openbsd/`](openbsd/) | OpenBSD 8.0 (Xfce) no ThinkPad X230 | script de pós-instalação e script de revisão |
+| [`openbsd/`](openbsd/) | OpenBSD 8.0 (Xfce) no ThinkPad X230 | scripts de pós-instalação, de revisão e do PJeOffice Pro |
 
 Na seção do CachyOS, os comandos funcionam tanto no **fish** quanto no **bash**, salvo onde indicado.
 
@@ -121,6 +121,7 @@ No OpenBSD não há só uma lista de pacotes: um script instala os programas e c
 |---|---|
 | `openbsd-x230.sh` | Pós-instalação: aplica correções e firmware, instala os pacotes e configura serviços, energia, desempenho, Wi-Fi, teclado, TrackPoint, tela de login, aparência do Xfce, terminal e atalhos de aplicativos web |
 | `revisao-openbsd.sh` | Revisão: confere pacotes, serviços, ajustes e arquivos de configuração, sem alterar nada, e lista o que falta |
+| `pjeoffice-openbsd.sh` | Instala o PJeOffice Pro do CNJ na pasta pessoal, rodando no JDK 11 do OpenBSD |
 
 ### Uso
 
@@ -151,6 +152,23 @@ Com o usuário comum, sem `doas`:
 sh package-list/openbsd/revisao-openbsd.sh
 ```
 
+#### 4. PJeOffice Pro (opcional)
+
+Com o usuário comum; o script pede a senha do `doas` só para instalar o JDK 11:
+
+```sh
+sh package-list/openbsd/pjeoffice-openbsd.sh
+```
+
+O PJeOffice Pro é um programa Java, e o CNJ só o distribui para Linux, Windows e macOS. O script baixa o `.zip` de Linux do site do CNJ, confere a soma SHA256, descarta o Java embutido (que é para Linux) e roda o `pjeoffice-pro.jar`, sem alteração, no JDK 11 do OpenBSD. Fica em `~/.local/share/pjeoffice-pro`, com atalho no menu.
+
+Dois ajustes fazem a janela se comportar como no GNOME e no KDE:
+
+- `-Dpjeoffice_desktop=true` pede o modo de janela, em vez do modo bandeja.
+- `--patch-module` troca, só para o PJeOffice, a classe `java.awt.SystemTray` por um substituto que responde "não há bandeja". Sem isso, no Xfce a janela se recolhe para a bandeja ao ser fechada ou minimizada, e o menu da bandeja aparece em branco. O substituto é compilado na instalação e fica em `sem-bandeja/`.
+
+Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certificado A1** (arquivo `.pfx`). **Token não foi testado**; o ePass2003 deve funcionar pelo OpenSC, indicando `/usr/local/lib/pkcs11/opensc-pkcs11.so` na configuração de certificado. Fechar a janela encerra o programa.
+
 ### O que o script configura
 
 - **Sistema:** `syspatch`, `fw_update`, `doas` para o grupo `wheel`, grupo `_shutdown` (desligar pelo menu) e classe de login `desktop`, com limite de memória por processo de metade da RAM.
@@ -165,7 +183,7 @@ sh package-list/openbsd/revisao-openbsd.sh
 ### Observações
 
 - **Hardware:** o script foi feito e testado num ThinkPad X230 com placa Wi-Fi Intel trocada (driver `iwm`). A placa sem fio é detectada pelo sistema, não pelo nome; o que é próprio do X230 são a rolagem do TrackPoint e, no script de revisão, o nome `iwm0` e os 4 threads esperados.
-- **Sem equivalente no OpenBSD 8.0:** Claude Code, ONLYOFFICE, PDFsam Basic, BibleTime (só a biblioteca SWORD), Wine, PJeOffice Pro, Tessera e os drivers SafeNet, SafeSign e SerproID, que dependem de Linux. O token ePass2003 funciona pelo OpenSC: no Firefox, carregue `/usr/local/lib/pkcs11/opensc-pkcs11.so` em Dispositivos de segurança.
+- **Sem equivalente no OpenBSD 8.0:** Claude Code, ONLYOFFICE, PDFsam Basic, BibleTime (só a biblioteca SWORD), Wine, Tessera e os drivers SafeNet, SafeSign e SerproID, que dependem de Linux. O PJeOffice Pro roda pelo script próprio (passo 4). O token ePass2003 funciona pelo OpenSC: no Firefox, carregue `/usr/local/lib/pkcs11/opensc-pkcs11.so` em Dispositivos de segurança.
 - **Pacotes com variantes ou mais de uma versão:** o `pkg_add` pergunta qual instalar. No script, `nome--variante` escolhe a variante (por exemplo `keepassxc--browser`) e `nome->=N` escolhe a versão (por exemplo `gimp->=3`). O script confere cada instalação com o `pkg_info` e lista no fim o que não instalou.
 - **Pendrive no painel:** o plugin só lista o que está no `/etc/fstab`. Veja o nome do pendrive com `dmesg | tail` (por exemplo `sd3`, depois dos discos internos e do volume criptografado) e registre-o: `/dev/sd3i /home/pedro/usb msdos rw,noauto,nodev,nosuid 0 0`. Feche a janela do Thunar na pasta antes de desmontar.
 - **OneDrive:** o `onedrive-cli` não existe para OpenBSD; use `rclone config` e escolha "Microsoft OneDrive".
