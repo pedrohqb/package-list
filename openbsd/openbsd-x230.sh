@@ -130,6 +130,7 @@ obs-studio              # OBS Studio: gravação de tela e transmissão ao vivo
 # Comunicação
 evolution               # Evolution: cliente de e-mail, contatos e calendário
 evolution-ews           # Evolution EWS: contas do Microsoft 365 e do Exchange no Evolution
+gnome-keyring           # GNOME Keyring: cofre de senhas (org.freedesktop.secrets) que o Evolution exige
 tdesktop                # Telegram: cliente oficial de mensagens do Telegram
 # (Discord, Teams, WhatsApp e Zoom: atalhos de aplicativo web, criados mais abaixo)
 
@@ -581,6 +582,8 @@ fi
 # Janela de saída sem "Hibernar" nem "Suspensão híbrida": a hibernação exige um
 # swap maior que a RAM, o que o particionamento automático não entrega.
 # LockScreen bloqueia a tela quando se suspende pelo botão do menu de saída.
+# LaunchGNOME inicia o gnome-keyring com a sessão: sem ele, o Evolution falha
+# com "org.freedesktop.secrets was not provided".
 put "$XML/xfce4-session.xml" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xfce4-session" version="1.0">
@@ -588,6 +591,9 @@ put "$XML/xfce4-session.xml" <<EOF
     <property name="LockScreen" type="bool" value="true"/>
     <property name="ShowHibernate" type="bool" value="false"/>
     <property name="ShowHybridSleep" type="bool" value="false"/>
+  </property>
+  <property name="compat" type="empty">
+    <property name="LaunchGNOME" type="bool" value="true"/>
   </property>
 </channel>
 EOF
