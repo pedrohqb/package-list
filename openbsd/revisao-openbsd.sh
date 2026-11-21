@@ -29,7 +29,8 @@ echo "== Arquivos de configuração"
 X="$HOME/.config/xfce4/xfconf/xfce-perchannel-xml"
 for f in "$HOME/.xsession" "$X/xsettings.xml" "$X/xfwm4.xml" "$X/keyboard-layout.xml" \
          "$X/xfce4-power-manager.xml" "$X/xfce4-terminal.xml" "$HOME/.kshrc" \
-         /etc/login.conf.d/desktop /etc/hostname.iwm0 /etc/X11/xenodm/Xsetup_0; do
+         /etc/login.conf.d/desktop /etc/hostname.iwm0 /etc/X11/xenodm/Xsetup_0 \
+         /etc/apm/suspend "$HOME/.config/autostart/dbus-sessao.desktop"; do
 	if [ -e "$f" ]; then bom; else ruim "arquivo $f"; fi
 done
 for a in chatgpt claude discord teams whatsapp zoom; do

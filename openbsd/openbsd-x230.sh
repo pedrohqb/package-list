@@ -349,6 +349,35 @@ else
 	warn "$GIVE não existe; a webcam vai exigir 'doas chown $ALVO /dev/video0'"
 fi
 
+# Tela bloqueada ao voltar da suspensão. O apmd executa /etc/apm/suspend logo
+# antes de suspender; isso cobre a tampa fechada e a bateria baixa. O botão
+# "Suspender" do Xfce segue outro caminho e é coberto pela opção LockScreen.
+msg "Bloqueio de tela ao suspender (/etc/apm/suspend)"
+put /etc/apm/suspend <<'EOF'
+#!/bin/sh
+# /etc/apm/suspend: o apmd executa este script, como root, logo antes de
+# suspender (tampa fechada, botão "Suspender" ou bateria baixa).
+# Bloqueia a tela de quem está na sessão gráfica, para o notebook voltar pedindo senha.
+
+# Dono da sessão gráfica: o xenodm entrega /dev/console a quem entrou.
+U="$(stat -f %Su /dev/console 2>/dev/null)"
+[ -n "$U" ] && [ "$U" != "root" ] || exit 0
+CASA="$(getent passwd "$U" | cut -d: -f6)"
+ADDR="$(cat "$CASA/.cache/dbus-sessao" 2>/dev/null)"
+
+# Tenta o protetor de tela do Xfce; se não responder, usa o xlock do sistema.
+if [ -n "$ADDR" ] && su -l "$U" -c \
+     "DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS='$ADDR' xfce4-screensaver-command --lock" \
+     >/dev/null 2>&1; then
+	sleep 1
+else
+	su -l "$U" -c "DISPLAY=:0 /usr/X11R6/bin/xlock -mode blank" >/dev/null 2>&1 &
+	sleep 2
+fi
+exit 0
+EOF
+chmod 755 /etc/apm/suspend
+
 msg "Toque para clicar no touchpad"
 touch /etc/wsconsctl.conf
 grep -q '^mouse.tp.tapping' /etc/wsconsctl.conf ||
@@ -551,10 +580,12 @@ fi
 
 # Janela de saída sem "Hibernar" nem "Suspensão híbrida": a hibernação exige um
 # swap maior que a RAM, o que o particionamento automático não entrega.
+# LockScreen bloqueia a tela quando se suspende pelo botão do menu de saída.
 put "$XML/xfce4-session.xml" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xfce4-session" version="1.0">
   <property name="shutdown" type="empty">
+    <property name="LockScreen" type="bool" value="true"/>
     <property name="ShowHibernate" type="bool" value="false"/>
     <property name="ShowHybridSleep" type="bool" value="false"/>
   </property>
@@ -711,6 +742,14 @@ xfwm4 --replace >/dev/null 2>&1 &
 rm -f "\$HOME/.config/autostart/primeiro-login.desktop"
 EOF
 chmod 755 "$CASA/.local/bin/primeiro-login.sh"
+# A cada login, anota o endereço do barramento da sessão, para o
+# /etc/apm/suspend (que roda como root) conseguir pedir o bloqueio da tela.
+put "$CFG/autostart/dbus-sessao.desktop" <<'EOF'
+[Desktop Entry]
+Type=Application
+Name=Endereco da sessao (para bloquear ao suspender)
+Exec=sh -c "umask 077; echo \"$DBUS_SESSION_BUS_ADDRESS\" > $HOME/.cache/dbus-sessao"
+EOF
 put "$CFG/autostart/primeiro-login.desktop" <<EOF
 [Desktop Entry]
 Type=Application
