@@ -82,11 +82,11 @@ baobab                  # Baobab: analisador de uso de disco
 deja-dup                # Déjà Dup: cópias de segurança
 simple-scan             # Simple Scan: digitalização de documentos
 gnome-font-viewer       # Fontes: visualiza e instala fontes
-snapshot                # Snapshot: tira fotos e grava vídeos com a webcam
 thunderbird             # Thunderbird: cliente de e-mail da Mozilla
 thunderbird-i18n-pt-BR  # Thunderbird: tradução para o português do Brasil
 # (já cobertos pelo Xfce: Orage = agenda, Ristretto = imagens, Parole = vídeo e áudio,
-#  Mousepad = editor de texto, Xarchiver = compactador, plugin de clima no painel)
+#  Mousepad = editor de texto, Xarchiver = compactador, plugin de clima no painel;
+#  o Snapshot, da webcam, depende do PipeWire e não roda: use o comando 'video')
 '
 
 PKG_CLI='
@@ -179,15 +179,18 @@ qemu                    # QEMU: emulador de máquinas (sem aceleração; para VM
 # (Wine, que substituiria o Bottles, não existe nos pacotes do OpenBSD 8.0)
 '
 
-# Aplicativos web: id|Nome|URL|ícone|categorias
+# Aplicativos web: id|Nome|URL|ícone|categorias|navegador
 # Ícone "site:dominio": baixa o ícone do próprio site (o tema não tem um para ele).
+# Navegador "app": janela própria no $WEBAPP_BROWSER. Navegador "firefox": janela
+# do Firefox, para Teams e Zoom, porque a webcam não funciona no Chromium do
+# OpenBSD (ele abre a câmera, mas não recebe imagem).
 WEBAPPS='
-chatgpt|ChatGPT|https://chatgpt.com/|site:chatgpt.com|Network;
-claude|Claude|https://claude.ai/|site:claude.ai|Network;
-discord|Discord|https://discord.com/app|discord|Network;InstantMessaging;
-teams|Microsoft Teams|https://teams.microsoft.com/|teams|Network;InstantMessaging;
-whatsapp|WhatsApp|https://web.whatsapp.com/|whatsapp|Network;InstantMessaging;
-zoom|Zoom|https://app.zoom.us/wc|Zoom|Network;VideoConference;
+chatgpt|ChatGPT|https://chatgpt.com/|site:chatgpt.com|Network;|app
+claude|Claude|https://claude.ai/|site:claude.ai|Network;|app
+discord|Discord|https://discord.com/app|discord|Network;InstantMessaging;|app
+teams|Microsoft Teams|https://teams.microsoft.com/|teams|Network;InstantMessaging;|firefox
+whatsapp|WhatsApp|https://web.whatsapp.com/|whatsapp|Network;InstantMessaging;|app
+zoom|Zoom|https://app.zoom.us/wc|Zoom|Network;VideoConference;|firefox
 '
 
 # ------------------------------------------------------------------------------
@@ -333,6 +336,18 @@ for linha in "machdep.lidaction=1" "kern.audio.record=1" "kern.video.record=1" $
 	grep -qxF "$linha" /etc/sysctl.conf || echo "$linha" >> /etc/sysctl.conf
 	sysctl "$linha" >/dev/null 2>&1 || true
 done
+
+# A webcam (/dev/video0) pertence ao root. O xenodm executa o GiveConsole como
+# root a cada login gráfico; esta linha entrega a câmera a quem entrou.
+msg "Webcam para o usuário da sessão gráfica"
+GIVE=/etc/X11/xenodm/GiveConsole
+if [ -f "$GIVE" ]; then
+	grep -q '/dev/video0' "$GIVE" ||
+		{ backup "$GIVE"; echo 'chown $USER /dev/video0' >> "$GIVE"; }
+	[ -e /dev/video0 ] && chown "$ALVO" /dev/video0
+else
+	warn "$GIVE não existe; a webcam vai exigir 'doas chown $ALVO /dev/video0'"
+fi
 
 msg "Toque para clicar no touchpad"
 touch /etc/wsconsctl.conf
@@ -634,9 +649,11 @@ done
 # ------------------------------------------------------------------------------
 # 5. Usuário: aplicativos web e primeiro login
 # ------------------------------------------------------------------------------
-msg "Atalhos de aplicativos web (abrem no $WEBAPP_BROWSER, em janela própria)"
+msg "Atalhos de aplicativos web (janela própria no $WEBAPP_BROWSER; Teams e Zoom no Firefox)"
 APPS="$CASA/.local/share/applications"
-printf '%s\n' "$WEBAPPS" | sed '/^$/d' | while IFS='|' read -r id nome url icone cats; do
+printf '%s\n' "$WEBAPPS" | sed '/^$/d' | while IFS='|' read -r id nome url icone cats nav; do
+	if [ "$nav" = "firefox" ]; then cmd="firefox --new-window $url"
+	else cmd="$WEBAPP_BROWSER --app=$url"; fi
 	case "$icone" in
 	site:*)
 		mkdir -p "$CASA/.local/share/icons"
@@ -653,7 +670,7 @@ printf '%s\n' "$WEBAPPS" | sed '/^$/d' | while IFS='|' read -r id nome url icone
 Type=Application
 Name=$nome
 Comment=$nome (aplicativo web)
-Exec=$WEBAPP_BROWSER --app=$url
+Exec=$cmd
 Icon=$icone
 Categories=$cats
 StartupWMClass=$id

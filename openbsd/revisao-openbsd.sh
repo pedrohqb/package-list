@@ -1,7 +1,7 @@
 #!/bin/sh
 # Revisão da instalação feita pelo openbsd-x230.sh. Só confere; não altera nada.
 # Uso (com o seu usuário, sem doas):  sh revisao-openbsd.sh
-PKGS="xfce xfce-extras xfce4-docklike greybird papirus-icon-theme cantarell-fonts jetbrains-mono noto-fonts noto-emoji liberation-fonts gvfs gvfs-smb xdg-user-dirs xarchiver unzip 7zip papers mpv cups cups-filters system-config-printer xfce4-mount xfce4-power-manager upower ntfs_3g exfat-fuse galculator gucharmap baobab deja-dup simple-scan gnome-font-viewer snapshot git github-cli node codex rclone wireguard-tools yt-dlp ocrmypdf pdfgrep qpdf tesseract tesseract-por GraphicsMagick fdupes ripgrep sysbench fastfetch nano fish audacity kdenlive obs-studio evolution evolution-ews tdesktop meld libreoffice libreoffice-i18n-pt-br pdfarranger qownnotes sword cdrtools dvd+rw-tools gimp pinta shotwell chromium firefox firefox-i18n-pt-BR remmina qbittorrent gradio spotify-qt keepassxc opensc ccid pcsc-lite qemu "
+PKGS="xfce xfce-extras xfce4-docklike greybird papirus-icon-theme cantarell-fonts jetbrains-mono noto-fonts noto-emoji liberation-fonts gvfs gvfs-smb xdg-user-dirs xarchiver unzip 7zip papers mpv cups cups-filters system-config-printer xfce4-mount xfce4-power-manager upower ntfs_3g exfat-fuse galculator gucharmap baobab deja-dup simple-scan gnome-font-viewer git github-cli node codex rclone wireguard-tools yt-dlp ocrmypdf pdfgrep qpdf tesseract tesseract-por GraphicsMagick fdupes ripgrep sysbench fastfetch nano fish audacity kdenlive obs-studio evolution evolution-ews tdesktop meld libreoffice libreoffice-i18n-pt-br pdfarranger qownnotes sword cdrtools dvd+rw-tools gimp pinta shotwell chromium firefox firefox-i18n-pt-BR remmina qbittorrent gradio spotify-qt keepassxc opensc ccid pcsc-lite qemu "
 ok=0; falta=0
 bom()  { ok=$((ok+1)); }
 ruim() { falta=$((falta+1)); printf '  FALTA: %s\n' "$*"; }
@@ -42,6 +42,7 @@ if id -Gn | tr ' ' '\n' | grep -qx _shutdown; then bom; else ruim "grupo _shutdo
 if [ "$(userinfo "$(id -un)" 2>/dev/null | awk '$1=="class"{print $2}')" = "desktop" ]; then bom
 else ruim "classe de login 'desktop' (limite de memória)"; fi
 if grep -q noatime /etc/fstab; then bom; else ruim "noatime em /etc/fstab"; fi
+if grep -q '/dev/video0' /etc/X11/xenodm/GiveConsole 2>/dev/null; then bom; else ruim "webcam para o usuário (GiveConsole)"; fi
 if grep -q 'setxkbmap' "$HOME/.xsession" 2>/dev/null; then bom; else ruim "teclado internacional em ~/.xsession"; fi
 if grep -q 'Wheel Emulation' "$HOME/.xsession" 2>/dev/null; then bom; else ruim "rolagem do TrackPoint em ~/.xsession"; fi
 n="$(sysctl -n hw.ncpuonline 2>/dev/null)"
