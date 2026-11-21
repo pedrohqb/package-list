@@ -100,6 +100,21 @@ else
 	echo "    O PJeOffice vai funcionar, mas recolhendo para a bandeja."
 fi
 
+# Token pelo OpenSC: o OpenSC informa que as chaves RSA assinam e decifram, mas
+# não cifram, e o Java 11 descarta um mecanismo informado assim; a assinatura
+# falha com "is not a RSAPrivateKey instance". O opensc-java.so carrega o OpenSC
+# e só acrescenta essa marca. É ele que se indica ao PJeOffice, na aba A3.
+FONTE="$(dirname "$0")/opensc-java.c"
+OPENSC="/usr/local/lib/pkcs11/opensc-pkcs11.so"
+if [ -f "$FONTE" ] && [ -f "$OPENSC" ]; then
+	echo "==> Compilando o opensc-java.so (token pelo OpenSC)"
+	cc -shared -fPIC -o "$DESTINO/opensc-java.so" "$FONTE" ||
+		echo "    AVISO: não compilou; o token pelo OpenSC não vai assinar no PJeOffice."
+else
+	echo "    AVISO: sem o opensc-java.c ao lado deste script ou sem o pacote opensc;"
+	echo "    o token pelo OpenSC não vai assinar no PJeOffice."
+fi
+
 # O .zip traz um ffmpeg de Linux com o nome ffmpeg.exe. O PJeOffice o procura
 # por esse nome na pasta do programa, então ele vira um atalho para o do OpenBSD.
 if [ -x "$FFMPEG" ] && [ -e "$DESTINO/ffmpeg.exe" ]; then
@@ -174,5 +189,10 @@ echo
 echo "Pronto. Para ver as mensagens no primeiro teste, rode pelo terminal:"
 echo "  $DESTINO/pjeoffice-pro.sh"
 echo
+[ -f "$DESTINO/opensc-java.so" ] && {
+	echo "Token (ePass2003 e outros do OpenSC): na configuração de certificado, aba A3,"
+	echo "indique $DESTINO/opensc-java.so"
+	echo
+}
 echo "A janela não recolhe mais para a bandeja: minimizar a deixa na barra de"
 echo "tarefas, e o menu do programa abre com o botão direito sobre a janela."

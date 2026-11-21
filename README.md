@@ -122,6 +122,7 @@ No OpenBSD não há só uma lista de pacotes: um script instala os programas e c
 | `openbsd-x230.sh` | Pós-instalação: aplica correções e firmware, instala os pacotes e configura serviços, energia, desempenho, Wi-Fi, teclado, TrackPoint, tela de login, aparência do Xfce, terminal e atalhos de aplicativos web |
 | `revisao-openbsd.sh` | Revisão: confere pacotes, serviços, ajustes e arquivos de configuração, sem alterar nada, e lista o que falta |
 | `pjeoffice-openbsd.sh` | Instala o PJeOffice Pro do CNJ na pasta pessoal, rodando no JDK 11 do OpenBSD |
+| `opensc-java.c` | Biblioteca que o script do PJeOffice compila para o Java assinar com token do OpenSC |
 
 ### Uso
 
@@ -169,7 +170,7 @@ Dois ajustes fazem a janela se comportar como no GNOME e no KDE:
 
 As funções de vídeo usam um `ffmpeg` externo, que o PJeOffice procura na pasta do programa com o nome `ffmpeg.exe`. O script troca o binário de Linux por um atalho para `/usr/local/bin/ffmpeg`.
 
-Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certificado A1** (arquivo `.pfx`), e as funções de vídeo que só dependem do `ffmpeg` (dividir por tamanho e por duração e extrair áudio, testadas; converter e otimizar usam o mesmo caminho) também. O **corte por trechos não funciona**: ele abre um player que precisa do JavaFX, e o OpenBSD 8.0 não tem o pacote `openjfx`. No lugar dele, o script deixa um aviso com as alternativas, entre elas cortar pelo terminal com `ffmpeg -i video.mp4 -ss 00:01:30 -to 00:04:00 -c copy trecho.mp4`. **Token não foi testado**; o ePass2003 deve funcionar pelo OpenSC, indicando `/usr/local/lib/pkcs11/opensc-pkcs11.so` na configuração de certificado. Fechar a janela encerra o programa.
+Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certificado A1** (arquivo `.pfx`), e as funções de vídeo que só dependem do `ffmpeg` (dividir por tamanho e por duração e extrair áudio, testadas; converter e otimizar usam o mesmo caminho) também. O **corte por trechos não funciona**: ele abre um player que precisa do JavaFX, e o OpenBSD 8.0 não tem o pacote `openjfx`. No lugar dele, o script deixa um aviso com as alternativas, entre elas cortar pelo terminal com `ffmpeg -i video.mp4 -ss 00:01:30 -to 00:04:00 -c copy trecho.mp4`. O **token ePass2003** também funciona (login no PJe testado), pelo OpenSC, mas não diretamente: o OpenSC informa que as chaves RSA assinam e decifram sem cifrar, o Java 11 descarta um mecanismo informado assim, e a assinatura falha com `is not a RSAPrivateKey instance`. O script compila o `opensc-java.c`, uma biblioteca que carrega o OpenSC e só acrescenta essa marca; na configuração de certificado do PJeOffice, aba A3, indique `~/.local/share/pjeoffice-pro/opensc-java.so` (caminho completo), e não o `opensc-pkcs11.so`. Fechar a janela encerra o programa.
 
 ### O que o script configura
 
