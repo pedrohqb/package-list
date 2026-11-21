@@ -471,7 +471,8 @@ put "$XML/xsettings.xml" <<EOF
 </channel>
 EOF
 
-# Janelas: tema, fonte do título e composição ligada.
+# Janelas: tema, fonte do título, composição ligada e encaixe nas bordas e nos
+# cantos ao arrastar (para isso, arrastar não troca de área de trabalho).
 put "$XML/xfwm4.xml" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xfwm4" version="1.0">
@@ -484,6 +485,7 @@ put "$XML/xfwm4.xml" <<EOF
     <property name="workspace_count" type="int" value="4"/>
     <property name="snap_to_border" type="bool" value="true"/>
     <property name="tile_on_move" type="bool" value="true"/>
+    <property name="wrap_windows" type="bool" value="false"/>
   </property>
 </channel>
 EOF
@@ -656,12 +658,18 @@ EOF
 	info "$nome"
 done
 
-# No primeiro login: cria as pastas pessoais e liga a tecla Super ao menu.
+# No primeiro login: cria as pastas pessoais e grava os atalhos de teclado.
 put "$CASA/.local/bin/primeiro-login.sh" <<EOF
 #!/bin/sh
 xdg-user-dirs-update
-xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/Super_L" \\
-	-n -t string -s "$MENU_SUPER"
+atalho() { xfconf-query -c xfce4-keyboard-shortcuts -p "\$1" -n -t string -s "\$2"; }
+# Super+Espaço abre o menu. (Super sozinha atrapalharia as combinações abaixo.)
+atalho "/commands/custom/<Super>space" "$MENU_SUPER"
+# Super+setas encaixam a janela: metades, maximizar e minimizar.
+atalho "/xfwm4/custom/<Super>Left"  tile_left_key
+atalho "/xfwm4/custom/<Super>Right" tile_right_key
+atalho "/xfwm4/custom/<Super>Up"    maximize_window_key
+atalho "/xfwm4/custom/<Super>Down"  hide_window_key
 rm -f "\$HOME/.config/autostart/primeiro-login.desktop"
 EOF
 chmod 755 "$CASA/.local/bin/primeiro-login.sh"
