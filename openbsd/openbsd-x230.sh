@@ -163,7 +163,7 @@ qbittorrent             # qBittorrent: cliente BitTorrent livre e sem anúncios
 
 # Música e Rádio
 gradio                  # Gradio: rádio pela internet (no lugar do Shortwave)
-ncspot                  # ncspot: cliente do Spotify no terminal, que toca sozinho (exige conta Premium)
+# (Spotify: sem cliente que funcione no OpenBSD 8.0; veja as observações do README)
 
 # Segurança e Senhas
 keepassxc--browser      # KeePassXC: gerenciador de senhas offline e de código aberto, com integração aos navegadores
