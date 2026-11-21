@@ -666,10 +666,16 @@ atalho() { xfconf-query -c xfce4-keyboard-shortcuts -p "\$1" -n -t string -s "\$
 # Super+Espaço abre o menu. (Super sozinha atrapalharia as combinações abaixo.)
 atalho "/commands/custom/<Super>space" "$MENU_SUPER"
 # Super+setas encaixam a janela: metades, maximizar e minimizar.
+# Cada ação aceita um atalho só, então os padrões das mesmas ações saem antes
+# (os do teclado numérico, que o X230 não tem, e Alt+F9 e Alt+F10).
+for antigo in "<Super>KP_Left" "<Super>KP_Right" "<Alt>F9" "<Alt>F10"; do
+	xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/\$antigo" -r 2>/dev/null
+done
 atalho "/xfwm4/custom/<Super>Left"  tile_left_key
 atalho "/xfwm4/custom/<Super>Right" tile_right_key
 atalho "/xfwm4/custom/<Super>Up"    maximize_window_key
 atalho "/xfwm4/custom/<Super>Down"  hide_window_key
+xfwm4 --replace >/dev/null 2>&1 &
 rm -f "\$HOME/.config/autostart/primeiro-login.desktop"
 EOF
 chmod 755 "$CASA/.local/bin/primeiro-login.sh"
