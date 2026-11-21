@@ -79,7 +79,6 @@ PKG_BLUEFIN='
 galculator              # Galculator: calculadora (no lugar da Calculadora do GNOME)
 gucharmap               # Gucharmap: mapa de caracteres (no lugar do Caracteres)
 baobab                  # Baobab: analisador de uso de disco
-deja-dup                # Déjà Dup: cópias de segurança
 simple-scan             # Simple Scan: digitalização de documentos
 gnome-font-viewer       # Fontes: visualiza e instala fontes
 thunderbird             # Thunderbird: cliente de e-mail da Mozilla
@@ -144,7 +143,7 @@ qownnotes               # QOwnNotes: notas em Markdown (no lugar do Joplin)
 # (ONLYOFFICE e PDFsam Basic não existem para OpenBSD)
 
 # Estudo e Leitura
-sword                   # SWORD: biblioteca e utilitários de estudo bíblico (o BibleTime não existe para OpenBSD)
+# (o BibleTime não existe para OpenBSD)
 
 # Gravação de Mídias
 cdrtools                # cdrtools: grava CDs e DVDs pelo terminal (no lugar do Brasero)
