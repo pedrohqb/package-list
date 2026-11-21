@@ -124,8 +124,9 @@ if [ -n "$MP" ] && [ -x "$JAVA21" ]; then
 		--add-modules javafx.base,javafx.graphics,javafx.controls,javafx.swing,javafx.media \
 		"$@"
 fi
+# Sem acentos: o xmessage nao exibe bem caracteres acentuados.
 MSG="O corte por trechos usa um player que precisa do JavaFX, e o OpenBSD 8.0
-não tem o pacote openjfx.
+nao tem o pacote openjfx.
 
 Alternativas:
  - no PJeOffice: Dividir a cada 'n' minutos ou a cada 'n' MB;
