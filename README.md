@@ -187,6 +187,8 @@ Situação no OpenBSD 8.0: o login no PJe e a assinatura funcionam com **certifi
 - **Pacotes com variantes ou mais de uma versão:** o `pkg_add` pergunta qual instalar. No script, `nome--variante` escolhe a variante (por exemplo `keepassxc--browser`) e `nome->=N` escolhe a versão (por exemplo `gimp->=3`). O script confere cada instalação com o `pkg_info` e lista no fim o que não instalou.
 - **Pendrive no painel:** o plugin só lista o que está no `/etc/fstab`. Veja o nome do pendrive com `dmesg | tail` (por exemplo `sd3`, depois dos discos internos e do volume criptografado) e registre-o: `/dev/sd3i /home/pedro/usb msdos rw,noauto,nodev,nosuid 0 0`. Feche a janela do Thunar na pasta antes de desmontar.
 - **OneDrive:** o `onedrive-cli` não existe para OpenBSD; use `rclone config` e escolha "Microsoft OneDrive".
+- **VPN WireGuard:** o WireGuard faz parte do sistema; o pacote `wireguard-tools` traz o `wg-quick`, que usa o mesmo arquivo `.conf` do Linux. Guarde-o como `/etc/wireguard/wg0.conf`, com dono `root` e permissão `600`, e use `doas wg-quick up wg0` e `doas wg-quick down wg0`; `doas wg show` mostra se o túnel subiu.
+- **Pastas de rede (Samba):** com o `gvfs-smb`, o Thunar abre `smb://servidor/pasta` (Ctrl+L para digitar o endereço). Pela VPN, use o endereço IP do servidor. Se o endereço ficar vermelho logo após instalar o pacote, saia e entre na sessão.
 
 ---
 
