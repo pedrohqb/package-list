@@ -234,6 +234,7 @@ ventoy-bin
 vim
 virt-manager
 vlc-plugins-all
+waydroid
 wget
 wireplumber
 wpa_supplicant
