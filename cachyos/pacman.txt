@@ -4,6 +4,7 @@ alacritty
 alsa-firmware
 alsa-plugins
 alsa-utils
+android-tools
 ark
 audacity
 augustus
